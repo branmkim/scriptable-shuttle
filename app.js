@@ -13,6 +13,8 @@ app.get('/api/times', (req, res) => {
     const hour = new Date().getHours();
     const min = new Date().getMinutes();
 
+    console.log(day, hour, min);
+
     let man = null;
     let mtc = null;
     if (day >= 1 && day <= 4) {
@@ -47,7 +49,7 @@ app.get('/api/times', (req, res) => {
     if (nextMtc + 1 < mtc.length - 1) resMtc.push(mtc[nextMtc + 1]);
     if (nextMtc + 2 < mtc.length - 1) resMtc.push(mtc[nextMtc + 2]);
 
-    res.json({ resMan, resMtc });
+    res.json({ resMan, resMtc, day, hour, min });
 });
 
 app.listen(port, () => {
