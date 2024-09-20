@@ -29,8 +29,8 @@ app.get('/api/times', (req, res) => {
         mtc = weekend.mtc;
     }
 
-    let nextMan = -1;
-    let nextMtc = -1;
+    let nextMan = 0;
+    let nextMtc = 0;
     for (let i = 0; i < man.length; i++) {
         if (hour < man[i].h || (hour == man[i].h && min < man[i].m)) {
             if (nextMan == -1) nextMan = i;
