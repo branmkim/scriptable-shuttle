@@ -13,8 +13,8 @@ app.use(express.json());
 app.get('/api/times', (req, res) => {
     const now = new Date();
     const weekday = weekdays.indexOf(now.toLocaleDateString("en-US", {timeZone: "America/New_York", weekday: "short"}))
-    const hour = now.toLocaleTimeString("en-US", {timeZone: "America/New_York", hour12: false, hour: "2-digit"})
-    const min = now.toLocaleTimeString("en-US", {timeZone: "America/New_York", hour12: false, minute: "2-digit"})
+    const hour = parseInt(now.toLocaleTimeString("en-US", {timeZone: "America/New_York", hour12: false, hour: "2-digit"}))
+    const min = parseInt(now.toLocaleTimeString("en-US", {timeZone: "America/New_York", hour12: false, minute: "2-digit"}))
 
     let man = null;
     let mtc = null;
@@ -32,13 +32,15 @@ app.get('/api/times', (req, res) => {
     let nextMan = 0;
     let nextMtc = 0;
     for (let i = 0; i < man.length; i++) {
-        if (hour < man[i].h || (hour == man[i].h && min < man[i].m)) {
-            if (nextMan == -1) nextMan = i;
+        if (hour * 60 + min < man[i].h * 60 + man[i].m) {
+            nextMan = i;
+            break;
         }
     }
     for (let i = 0; i < mtc.length; i++) {
-        if (hour < mtc[i].h || (hour == mtc[i].h && min < mtc[i].m)) {
-            if (nextMtc == -1) nextMtc = i;
+        if (hour * 60 + min < mtc[i].h * 60 + mtc[i].m) {
+            nextMtc = i;
+            break;
         }
     }
 
@@ -50,7 +52,7 @@ app.get('/api/times', (req, res) => {
     if (nextMtc + 1 < mtc.length - 1) resMtc.push(mtc[nextMtc + 1]);
     if (nextMtc + 2 < mtc.length - 1) resMtc.push(mtc[nextMtc + 2]);
 
-    res.json({ resMan, resMtc });
+    res.json({ weekday, hour, min, resMan, resMtc });
 });
 
 app.listen(port, () => {
